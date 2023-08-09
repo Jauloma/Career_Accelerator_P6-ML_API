@@ -37,7 +37,7 @@ sepssis_model = pickle.load(open('gradient_boosting_model.pkl','rb'))
 @app.post('/sepssis_prediction')
 def sepssis_pred(input_parameters : model_input):
 
-    input_data = input_parameters.json()
+    input_data = input_parameters.model_dump_json()
     input_dictionary = json.loads(input_data)
 
     PRG = input_dictionary['PlasmaGlucose']
