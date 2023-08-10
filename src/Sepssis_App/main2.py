@@ -80,9 +80,7 @@ async def sepsis_classification(sepsis: Sepsis):
     # Define variables outside the 'try' block
     red_x = u"\u274C"
     green_checkmark = u"\u2713"
-    msg = "Execution went fine"
-    code = 1
-    pred = None
+    
 
     try:
          # Create dataframe
@@ -112,6 +110,9 @@ async def sepsis_classification(sepsis: Sepsis):
          df['Predicted label'] = predicted_label
 
          print(f"{green_checkmark} This patient in ICU has been classified as Sepsis: {predicted_label}")
+         msg = "Execution went fine"
+         code = 1
+         pred = predicted_label
 
     except Exception as e:
         print(f"\033[91m{red_x} An exception occurred: {str(e)}")
@@ -122,4 +123,4 @@ async def sepsis_classification(sepsis: Sepsis):
     result = {"Execution_msg": msg, "execution_code": code, "prediction": pred}
     return result
 if __name__ == "__main__":
-    uvicorn.run("main2:app", reload = True)
+    uvicorn.run("main2:app", reload = False)
