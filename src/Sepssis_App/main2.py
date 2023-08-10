@@ -101,6 +101,7 @@ async def sepsis_classification(sepsis: Sepsis):
 
          # ML part
          output = model.predict(df)
+         print(f'This is the output: {output}')
 
          # Get index of predicted class
          predicted_idx = output
@@ -110,12 +111,15 @@ async def sepsis_classification(sepsis: Sepsis):
          predicted_label = df['Predicted label'].replace(idx_to_labels)
          df['Predicted label'] = predicted_label
 
-         print(f"{green_checkmark} This patient in ICU has been classified as: {predicted_label}")
+         print(f"{green_checkmark} This patient in ICU has been classified as Sepsis: {predicted_label}")
 
-    except:
-         print(f"\033[91m{red_x} Something went wrong during the prediction of patient's sepsis state")
-         msg = "Execution did not go well"
-         code = 0
-
+    except Exception as e:
+        print(f"\033[91m{red_x} An exception occurred: {str(e)}")
+        msg = "Execution did not go well"
+        code = 0
+        pred = None
+        
     result = {"Execution_msg": msg, "execution_code": code, "prediction": pred}
     return result
+if __name__ == "__main__":
+    uvicorn.run("main2:app", reload = True)
