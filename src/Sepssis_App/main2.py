@@ -77,7 +77,7 @@ async def root():
 
 @app.post('/classify')
 async def sepsis_classification(sepsis: Sepsis):
-    # Define variables outside the 'try' block
+    # Define checkmarks
     red_x = u"\u274C"
     green_checkmark = u"\u2713"
     
@@ -112,7 +112,8 @@ async def sepsis_classification(sepsis: Sepsis):
          print(f"{green_checkmark} This patient in ICU has been classified as Sepsis: {predicted_label}")
          msg = "Execution went fine"
          code = 1
-         pred = predicted_label
+         pred = df.to_dict("records") #predicted_label
+         
 
     except Exception as e:
         print(f"\033[91m{red_x} An exception occurred: {str(e)}")
