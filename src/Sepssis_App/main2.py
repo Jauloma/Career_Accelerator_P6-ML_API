@@ -54,14 +54,17 @@ ml_core_fp = os.path.join(DIRPATH, 'gradient_boosting_model.pkl')
 labels = ['Negative', 'Positive']
 
 # Loading
-ml_components_dict = load_ml_components(fp=ml_core_fp)
+end2end_pipeline = load_ml_components(fp=ml_core_fp)
+
+# Access the model step of the pipeline
+model = end2end_pipeline.named_steps['model']
 
 idx_to_labels = {i: l for (i, l) in enumerate(labels)}
-end2end_pipeline = ml_components_dict
 
 print(f'\n[Info]Predictable labels: {labels}')
 print(f'\n[Info]Indices to labels: {idx_to_labels}')
-print(f'\n[Info]ML components loaded: {list(ml_components_dict.keys())}')
+# Print information about the loaded model
+print(f'\n[Info]ML components loaded - Model: {model}')
 
 # API
 app = FastAPI(title='Sepsis Prediction API')
@@ -74,50 +77,45 @@ async def root():
 
 @app.post('/classify')
 async def sepsis_classification(sepsis: Sepsis):
+    # Define variables outside the 'try' block
+    red_x = u"\u274C"
+    green_checkmark = u"\u2713"
+    msg = "Execution went fine"
+    code = 1
+    pred = None
+
     try:
-        # Create dataframe
-        df = pd.DataFrame(
-            {
-            'PlasmaGlucose': [sepsis.PRG],
-            'BloodWorkResult_1 (mu U/ml)': [sepsis.PL],
-            'BloodPressure (mm Hg)': [sepsis.PR],
-            'BloodWorkResult_2 (mm)': [sepsis.SK],
-            'BloodWorkResult_3  (mu U/ml)': [sepsis.TS],
-            'BodyMassIndex (weight in kg/(height in m)^2': [sepsis.M11],
-            'BloodWorkResult_4 (mu U/ml)': [sepsis.BD2],
-            'Age (years)': [sepsis.Age]}
-        )
-        print(f'[Info]Input data as dataframe:\n{df.to_markdown()}')
+         # Create dataframe
+         df = pd.DataFrame(
+             {
+                 'PlasmaGlucose': [sepsis.PlasmaGlucose],  
+                'BloodWorkResult_1 (mu U/ml)': [sepsis.BloodWorkResult_1],  
+                'BloodPressure (mm Hg)': [sepsis.BloodPressure],  
+                'BloodWorkResult_2 (mm)': [sepsis.BloodWorkResult_2],  
+                'BloodWorkResult_3  (mu U/ml)': [sepsis.BloodWorkResult_3],  
+                'BodyMassIndex (weight in kg/(height in m)^2': [sepsis.BodyMassIndex],  
+                'BloodWorkResult_4 (mu U/ml)': [sepsis.BloodWorkResult_4],  
+                'Age (years)': [sepsis.Age]}  
+         )
+         print(f'[Info]Input data as dataframe:\n{df.to_markdown()}')
 
-        # ML part
-        output = end2end_pipeline.predict_proba(df)
-        # store confidence score/probability for the predicted classification
-        confidence_score = output.max(axis = -1)
-        df['Confidence score'] = confidence_score
+         # ML part
+         output = model.predict(df)
 
-        ## Get index of predicted class
-        predicted_idx = output.argmax(axis = -1)
+         # Get index of predicted class
+         predicted_idx = output
 
-        # Store index then replace by the matching label
-        df['Predicted label'] = predicted_idx
-        predicted_label = df['Predicted label'].replace(idx_to_labels)
-        df['Predicted label'] = predicted_label
-        
-        # Define a Unicode character for a checkmarks
-        green_checkmark = u"\u2713"
-        red_x = u"\u274C"
+         # Store index then replace by the matching label
+         df['Predicted label'] = predicted_idx
+         predicted_label = df['Predicted label'].replace(idx_to_labels)
+         df['Predicted label'] = predicted_label
 
-        print(f"{green_checkmark} This patient in ICU has been classified as: {predicted_label}")
-        msg = "Execution went fine"
-        code = 1
-        pred = df.to_dict("records")
+         print(f"{green_checkmark} This patient in ICU has been classified as: {predicted_label}")
+
     except:
-        print(f"\033[91m{red_x} Something went wrong during the prediction of patient's sepsis state")
-        msg = "Execution did not go well"
-        code = 0
-        pred = None
-    result = {"Execution_msg": msg, "execution_code":code, "prediction" : pred}
+         print(f"\033[91m{red_x} Something went wrong during the prediction of patient's sepsis state")
+         msg = "Execution did not go well"
+         code = 0
+
+    result = {"Execution_msg": msg, "execution_code": code, "prediction": pred}
     return result
-
-        
-
