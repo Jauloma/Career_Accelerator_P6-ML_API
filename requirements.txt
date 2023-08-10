@@ -5,3 +5,4 @@ pydantic
 uvicorn
 pypi-json
 requests
+pandas
