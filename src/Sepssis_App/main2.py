@@ -1,18 +1,18 @@
-from fastapi import FastAPI
-from typing import List, Literal
-from pydantic import BaseModel
-import uvicorn
-import pandas as pd
-import pickle, os
+from fastapi import FastAPI # Import the FastAPI framework for building APIs
+from typing import List, Literal # Import typing hints for function annotations
+from pydantic import BaseModel # Import BaseModel for creating data models
+import uvicorn # Import uvicorn for running the FastAPI app
+import pandas as pd # Import pandas library for data manipulation
+import pickle, os # Import pickle and os modules for handling files and data serialization
 
-# Useful functions
+# Define a function to load machine learning components
 def load_ml_components(fp):
     '''Load machine learning to re-use in app '''
     with open(fp, 'rb') as f:
-        object = pickle.load(f)
-    return object
+        object = pickle.load(f) # Load a pickled object (machine learning model)
+    return object # Return the loaded object
 
-# Input Modeling
+# Define a Pydantic model for the input data
 class Sepsis(BaseModel):
     """
     Represents the input data for the model prediction.
@@ -29,7 +29,7 @@ class Sepsis(BaseModel):
 
         'sepsis' is the target feature which holds 0 = Negative and 1 = Positive.
     """
-    # Here are the input features:
+    # Define the input features as class attributes
 
     PlasmaGlucose : int
     BloodWorkResult_1 : int
@@ -47,42 +47,50 @@ then extracts the directory path from the absolute path of the model file.
 This is useful when we need to locate the file 
 relative to our script's location.
 """
+# Get the absolute path of the current directory
 DIRPATH = os.path.dirname(os.path.realpath(__file__))
+
+# Join the directory path with the model file name
 ml_core_fp = os.path.join(DIRPATH, 'gradient_boosting_model.pkl')
 
 # Define the labels manually
 labels = ['Negative', 'Positive']
 
-# Loading
-end2end_pipeline = load_ml_components(fp=ml_core_fp)
+# Load the machine learning components
+end2end_pipeline = load_ml_components(fp=ml_core_fp) # Load the machine learning model from the file
 
 # Access the model step of the pipeline
-model = end2end_pipeline.named_steps['model']
+model = end2end_pipeline.named_steps['model'] # Access the model component from the pipeline
 
+# Create a dictionary to map index to labels
 idx_to_labels = {i: l for (i, l) in enumerate(labels)}
 
+# Print predictable labels and index-to-label mapping
 print(f'\n[Info]Predictable labels: {labels}')
 print(f'\n[Info]Indices to labels: {idx_to_labels}')
+
 # Print information about the loaded model
 print(f'\n[Info]ML components loaded - Model: {model}')
 
-# API
-app = FastAPI(title='Sepsis Prediction API')
+# Create the FastAPI application instance
+app = FastAPI(title='Sepsis Prediction API') # Create a FastAPI instance with a title
 
+# Define a route to handle the root endpoint
 @app.get('/')
 async def root():
     return{
         "info": "Sepsis Prediction API: This interface is about the prediction of sepsis disease of patients in ICU."
     }
 
+# Define a route to handle the prediction
 @app.post('/classify')
 async def sepsis_classification(sepsis: Sepsis):
-    # Define checkmarks
+    # Define checkmarks for printing symbols
     red_x = u"\u274C"
     green_checkmark = "\033[32m" + u"\u2713" + "\033[0m" #u"\u2713"
 
     try:
-         # Create dataframe
+         # # Create a dataframe from the input data
          df = pd.DataFrame(
              {
                 'PlasmaGlucose': [sepsis.PlasmaGlucose],  
@@ -94,9 +102,10 @@ async def sepsis_classification(sepsis: Sepsis):
                 'BloodWorkResult_4(U/ml)': [sepsis.BloodWorkResult_4],  
                 'Age (years)': [sepsis.Age]}  
          )
+         # Print input data as a dataframe
          print(f'[Info]Input data as dataframe:\n{df.to_markdown()}')
 
-         # ML part
+         # Predict using the loaded model
          output = model.predict(df)
          confidence_scores = model.predict_proba(df)  # Predict the probabilities for each class
          print(f'Considering the best confidence score, the output is: {output}')
@@ -135,7 +144,10 @@ async def sepsis_classification(sepsis: Sepsis):
         code = 0
         pred = None
         
+    # Create the API response
     result = {"Execution_msg": msg, "execution_code": code, "prediction": pred}
     return result
+
+# Run the FastAPI application using uvicorn
 if __name__ == "__main__":
     uvicorn.run("main2:app", reload = False)
