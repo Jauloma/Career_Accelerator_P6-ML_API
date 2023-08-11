@@ -79,27 +79,28 @@ async def root():
 async def sepsis_classification(sepsis: Sepsis):
     # Define checkmarks
     red_x = u"\u274C"
-    green_checkmark = u"\u2713"
-    
+    green_checkmark = "\033[32m" + u"\u2713" + "\033[0m" #u"\u2713"
 
     try:
          # Create dataframe
          df = pd.DataFrame(
              {
-                 'PlasmaGlucose': [sepsis.PlasmaGlucose],  
-                'BloodWorkResult_1 (mu U/ml)': [sepsis.BloodWorkResult_1],  
-                'BloodPressure (mm Hg)': [sepsis.BloodPressure],  
-                'BloodWorkResult_2 (mm)': [sepsis.BloodWorkResult_2],  
-                'BloodWorkResult_3  (mu U/ml)': [sepsis.BloodWorkResult_3],  
-                'BodyMassIndex (weight in kg/(height in m)^2': [sepsis.BodyMassIndex],  
-                'BloodWorkResult_4 (mu U/ml)': [sepsis.BloodWorkResult_4],  
+                'PlasmaGlucose': [sepsis.PlasmaGlucose],  
+                'BloodWorkResult_1(U/ml)': [sepsis.BloodWorkResult_1],  
+                'BloodPressure(mm Hg)': [sepsis.BloodPressure],  
+                'BloodWorkResult_2(mm)': [sepsis.BloodWorkResult_2],  
+                'BloodWorkResult_3(U/ml)': [sepsis.BloodWorkResult_3],  
+                'BodyMassIndex(kg/m)^2': [sepsis.BodyMassIndex],  
+                'BloodWorkResult_4(U/ml)': [sepsis.BloodWorkResult_4],  
                 'Age (years)': [sepsis.Age]}  
          )
          print(f'[Info]Input data as dataframe:\n{df.to_markdown()}')
 
          # ML part
          output = model.predict(df)
-         print(f'This is the output: {output}')
+         confidence_scores = model.predict_proba(df)  # Predict the probabilities for each class
+         print(f'Considering the best confidence score, the output is: {output}')
+         print(f'Confidence scores: {confidence_scores}')
 
          # Get index of predicted class
          predicted_idx = output
@@ -109,10 +110,23 @@ async def sepsis_classification(sepsis: Sepsis):
          predicted_label = df['Predicted label'].replace(idx_to_labels)
          df['Predicted label'] = predicted_label
 
-         print(f"{green_checkmark} This patient in ICU has been classified as Sepsis: {predicted_label}")
+         # Map predicted indices to labels
+         predicted_labels = [idx_to_labels[idx] for idx in output]
+
+         # Store the predicted probabilities for each class in the dataframe
+         for i, label in enumerate(labels):
+             df[f'Confidence_{label}'] = confidence_scores[:, i] * 100  # Convert to percentage
+
+             # Print the result with confidence scores as percentages
+             if predicted_labels:
+                  i = 0  
+                  label = predicted_labels[0]  # Get the first predicted label
+                  confidence_score_percentage = max(confidence_scores[i]) * 100
+                  print(f"{green_checkmark} This patient in ICU has been classified as Sepsis {label} with confidence of: {confidence_score_percentage:.1f}%")
+
          msg = "Execution went fine"
          code = 1
-         pred = df.to_dict("records") #predicted_label
+         pred = df.to_dict("records") 
          
 
     except Exception as e:
