@@ -40,6 +40,6 @@ Another route is defined using the @app.post('/classify') decorator. This route 
     8.	Handles exceptions that may occur during the prediction process, printing error messages and returning a response indicating execution status.
 
 ## Running the FastAPI Application: 
-Finally, the script checks if it's the main module and then runs the FastAPI application using uvicorn. The argument "main:app" specifies the module name and the FastAPI application instance. The reload argument is set to False to prevent automatic reloading of the server.
+Finally, the script checks if it's the main module and then runs the FastAPI application using uvicorn. The argument "main:app" specifies the module name and the FastAPI application instance. The reload argument is set to True to allow automatic reloading of the server.
 
 This code represents a complete workflow for setting up a FastAPI-based API for sepsis prediction using a pre-trained machine learning model. It handles requests for classifying sepsis cases and provides informative responses, including predicted labels and confidence scores
