@@ -76,11 +76,12 @@ print(f'\n[Info]ML components loaded - Model: {model}')
 app = FastAPI(title='Sepsis Prediction API') # Create a FastAPI instance with a title
 
 # Define a route to handle the root endpoint
-@app.get('/')
+@app.get('/') 
 async def root():
     return{
         "info": "Sepsis Prediction API: This interface is about the prediction of sepsis disease of patients in ICU."
     }
+    
 
 # Define a route to handle the prediction
 @app.post('/classify')
