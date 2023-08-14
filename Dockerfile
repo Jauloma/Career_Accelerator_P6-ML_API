@@ -1,8 +1,8 @@
 FROM python:3.8
-WORKDIR /src/Sepsis_App/app
+WORKDIR /src/Sepsis_App
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
-COPY ./main.py .
+COPY ./src/Sepsis_App/main.py .
 
 EXPOSE 7680
-CMD ["python", "/src/Sepsis_App/app/main.py"]
+CMD ["python", "/src/Sepsis_App/main.py"]
