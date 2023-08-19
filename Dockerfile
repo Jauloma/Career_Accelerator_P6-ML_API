@@ -6,4 +6,4 @@ COPY ./src/Sepsis_App/main.py .
 
 
 EXPOSE 7680
-CMD ["python", "/src/Sepsis_App/main.py"]
+CMD ["python", "main.py"]
