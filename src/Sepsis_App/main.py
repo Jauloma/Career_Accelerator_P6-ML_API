@@ -77,31 +77,38 @@ app = FastAPI(title='Sepsis Prediction API') # Create a FastAPI instance with a 
 
 # Define a route to handle the root endpoint
 @app.get('/') 
-async def root():
+def root():
     return{
-        "info": "Sepsis Prediction API: This interface is about the prediction of sepsis disease of patients in ICU."
+        "info" : "Sepsis Prediction API: This interface is about the prediction of sepsis disease of patients in ICU."
     }
     
 
 # Define a route to handle the prediction
 @app.post('/classify')
-async def sepsis_classification(sepsis: Sepsis):
+def sepsis_classification(PlasmaGlucose : int,
+    BloodWorkResult_1 : int,
+    BloodPressure : int,
+    BloodWorkResult_2 : int,
+    BloodWorkResult_3 : int,
+    BodyMassIndex : float,
+    BloodWorkResult_4 : float,
+    Age : int):
     # Define checkmarks for printing symbols
     red_x = u"\u274C"
     green_checkmark = "\033[32m" + u"\u2713" + "\033[0m" #u"\u2713"
 
     try:
-         # # Create a dataframe from the input data
+         # # Create a dataframe from the input data, to solve the indexing issue, wrapp dict in a list
          df = pd.DataFrame(
-             {
-                'PlasmaGlucose': [sepsis.PlasmaGlucose],  
-                'BloodWorkResult_1(U/ml)': [sepsis.BloodWorkResult_1],  
-                'BloodPressure(mm Hg)': [sepsis.BloodPressure],  
-                'BloodWorkResult_2(mm)': [sepsis.BloodWorkResult_2],  
-                'BloodWorkResult_3(U/ml)': [sepsis.BloodWorkResult_3],  
-                'BodyMassIndex(kg/m)^2': [sepsis.BodyMassIndex],  
-                'BloodWorkResult_4(U/ml)': [sepsis.BloodWorkResult_4],  
-                'Age (years)': [sepsis.Age]}  
+            [ {
+                'PlasmaGlucose': PlasmaGlucose,  
+                'BloodWorkResult_1(U/ml)': BloodWorkResult_1,  
+                'BloodPressure(mm Hg)': BloodPressure,  
+                'BloodWorkResult_2(mm)': BloodWorkResult_2,  
+                'BloodWorkResult_3(U/ml)': BloodWorkResult_3,  
+                'BodyMassIndex(kg/m)^2': BodyMassIndex,  
+                'BloodWorkResult_4(U/ml)':BloodWorkResult_4,  
+                'Age (years)':Age}  ]
          )
          # Print input data as a dataframe
          print(f'[Info]Input data as dataframe:\n{df.to_markdown()}')
