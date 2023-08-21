@@ -6,11 +6,11 @@ This repository contains a FastAPI-based web application that provides an API fo
 
 To get started with the Sepsis Prediction API, follow the steps below:
 
-### Prerequisites
+## Prerequisites
 
 - Docker: Make sure you have Docker installed on your machine.
 
-### Installation
+## Installation
 
 1. Clone this repository to your local machine:
 
@@ -30,15 +30,12 @@ The API will now be accessible at http://localhost:7860.
 
 ## API Endpoints
 
-### Root Endpoint
-    - URL: http://localhost:7860/
-    - Method: GET
-    - Description: Provides basic information about the Sepsis Prediction API.
+| Endpoint                            | URL                                                        | Method | Description                                               |
+| ----------------------------------- | ---------------------------------------------------------- | ------ | --------------------------------------------------------- |
+| Root Endpoint                      | http://localhost:7860/                                    | GET    | Provides basic information about the Sepsis Prediction API. |
+| Sepsis Classification Endpoint     | http://localhost:7860/spaces/UholoDala/sepsis_classic/classify | POST   | Accepts patient data and performs sepsis classification. Provides the prediction and confidence scores. |
+| [Sepsis Prediction Article](<insert_article_link_here>) | - | - | Learn more about this app and its development in our Sepsis Prediction article. |
 
-### Sepsis Classification Endpoint
-    - URL: http://localhost:7860/spaces/UholoDala/sepsis_classic/classify
-    - Method: POST
-    - Description: Accepts patient data and performs sepsis classification. Provides the prediction and confidence scores.
 
 ## Usage
 You can interact with the API using tools like curl, web browsers, or API testing tools like Postman.
