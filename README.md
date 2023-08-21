@@ -46,7 +46,7 @@ The API will now be accessible at http://127.0.0.1:8000/docs#/default/sepsis_cla
 | ----------------------------------- | ---------------------------------------------------------- | ------ | --------------------------------------------------------- |
 | Root Endpoint                      | https://uholodala-sepsis-classic.hf.space/docs#/default/root__get                                    | GET    | Provides basic information about the Sepsis Prediction API. |
 | Sepsis Classification Endpoint     | https://uholodala-sepsis-classic.hf.space/docs#/default/sepsis_classification_spaces_UholoDala_sepsis_classic_classify_post | POST   | Accepts patient data and performs sepsis classification. Provides the prediction and confidence scores. |
-| [Sepsis Prediction Article](<insert_article_link_here>) | - | - | Learn more about this app and its development in our Sepsis Prediction article. |
+| [Sepsis Prediction Article](https://medium.com/jaroyajo/sepsis-prediction-app-for-icu-patients-19304598dfd3) | - | - | Learn more about this app and its development in our Sepsis Prediction article. |
 
 
 ## Usage
