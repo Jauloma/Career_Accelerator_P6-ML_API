@@ -38,14 +38,14 @@ To get started with the Sepsis Prediction API, follow the steps below:
 4. Run the Docker container:
     docker run -d -p 7860:7860 sepsis-prediction-api
 
-The API will now be accessible at http://localhost:7860.
+The API will now be accessible at http://127.0.0.1:8000/docs#/default/sepsis_classification_classify_post.
 
 ## API Endpoints
 
 | Endpoint                            | URL                                                        | Method | Description                                               |
 | ----------------------------------- | ---------------------------------------------------------- | ------ | --------------------------------------------------------- |
-| Root Endpoint                      | http://localhost:7860/                                    | GET    | Provides basic information about the Sepsis Prediction API. |
-| Sepsis Classification Endpoint     | http://localhost:7860/spaces/UholoDala/sepsis_classic/classify | POST   | Accepts patient data and performs sepsis classification. Provides the prediction and confidence scores. |
+| Root Endpoint                      | https://uholodala-sepsis-classic.hf.space/docs#/default/root__get                                    | GET    | Provides basic information about the Sepsis Prediction API. |
+| Sepsis Classification Endpoint     | https://uholodala-sepsis-classic.hf.space/docs#/default/sepsis_classification_spaces_UholoDala_sepsis_classic_classify_post | POST   | Accepts patient data and performs sepsis classification. Provides the prediction and confidence scores. |
 | [Sepsis Prediction Article](<insert_article_link_here>) | - | - | Learn more about this app and its development in our Sepsis Prediction article. |
 
 
@@ -62,7 +62,7 @@ You can interact with the API using tools like curl, web browsers, or API testin
   "BodyMassIndex": 25.5,
   "BloodWorkResult_4": 12.5,
   "Age": 50
-}' http://localhost:7860/spaces/UholoDala/sepsis_classic/classify
+}' https://uholodala-sepsis-classic.hf.space/docs#/default/sepsis_classification_spaces_UholoDala_sepsis_classic_classify_post
 
 ## Dependencies
     - pytest
