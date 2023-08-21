@@ -1,3 +1,15 @@
+# Table of Contents
+- [Sepsis Prediction API](#sepsis-prediction-api)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+  - [API Endpoints](#api-endpoints)
+  - [Usage](#usage)
+    - [Example curl command](#example-curl-command-to-perform-sepsis-classification)
+  - [Dependencies](#dependencies)
+  - [Acknowledgments](#acknowledgments)
+
+
 # Sepsis Prediction API
 
 This repository contains a FastAPI-based web application that provides an API for predicting sepsis disease in patients based on input features. The API leverages a machine learning model trained on relevant data. The API allows users to submit patient data and receive a prediction along with confidence scores.
