@@ -64,6 +64,8 @@ You can interact with the API using tools like curl, web browsers, or API testin
   "Age": 50
 }' https://uholodala-sepsis-classic.hf.space/docs#/default/sepsis_classification_spaces_UholoDala_sepsis_classic_classify_post
 
+Huggingface Home: https://huggingface.co/spaces/UholoDala/sepsis_classic
+
 ## Dependencies
     - pytest
     - scikit-learn
