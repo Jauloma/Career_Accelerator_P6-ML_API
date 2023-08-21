@@ -83,3 +83,6 @@ This project is licensed under the MIT License.
 This project was developed as part of the Azubi Africa Data Analysis LP6 Project. We would like to thank all contributors for their valuable insights and efforts.
 
 For more information, feel free to contact me at jacobjaroya@azubiafrica.org or jaroyajo@gmail.com.
+
+## Github link:
+    https://github.com/Jauloma/Career_Accelerator_P6-ML_API.git
